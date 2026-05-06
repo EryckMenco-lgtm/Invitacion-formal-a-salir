@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Una pregunta especial...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --crimson: #9b0030;
+            --rose: #c0003c;
+            --gold: #d4a574;
+            --soft-pink: #d4a0b0;
+            --dark-bg: #070005;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            min-height: 100dvh;
+            background: var(--dark-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lato', sans-serif;
+            position: relative;
+        }
+
+        /* ---- FONDO DEGRADADO ANIMADO ---- */
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 60%, #3a0018 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, #1a000a 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 80% 20%, #1a000f 0%, transparent 60%);
+            animation: breathe 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* ---- PARTICULAS ---- */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            top: -60px;
+            animation: drift linear infinite;
+            user-select: none;
+        }
+
+        @keyframes drift {
+            0% {
+                top: -60px;
+                opacity: 0;
+                transform: rotate(0deg) translateX(0px);
+            }
+            8% { opacity: 1; }
+            90% { opacity: 0.7; }
+            100% {
+                top: 110dvh;
+                opacity: 0;
+                transform: rotate(540deg) translateX(80px);
+            }
+        }
+
+        /* ---- CARD PRINCIPAL ---- */
+        .card {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 24px;
+            max-width: 440px;
+            width: 92%;
+        }
+
+        .top-icon {
+            font-size: clamp(2.8rem, 10vw, 4rem);
+            display: block;
+            margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 16px rgba(180, 0, 60, 0.7));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .question {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.35rem, 5.5vw, 2rem);
+            color: #fff;
+            line-height: 1.45;
+            margin-bottom: 12px;
+            text-shadow:
+                0 0 24px rgba(200, 0, 70, 0.7),
+                0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .question em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hint {
+            font-size: clamp(0.78rem, 3vw, 0.92rem);
+            color: var(--soft-pink);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 48px;
+            opacity: 0.8;
+        }
+
+        /* ---- BOTONES ---- */
+        .btn-wrap {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-si {
+            background: linear-gradient(135deg, #7a0028 0%, #c0003c 50%, #e8004e 100%);
+            color: #fff;
+            border: none;
+            padding: clamp(13px, 3vw, 17px) clamp(32px, 8vw, 50px);
+            font-size: clamp(1rem, 4vw, 1.15rem);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow:
+                0 0 24px rgba(200, 0, 60, 0.55),
+                0 4px 18px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+            letter-spacing: 1.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-si:hover {
+            transform: scale(1.06);
+            box-shadow:
+                0 0 36px rgba(230, 0, 80, 0.8),
+                0 6px 22px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn-si:active {
+            transform: scale(0.97);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #7a0028 0%, #c0003c 50%, #e8004e 100%);
+            color: #fff;
+            border: none;
+            padding: clamp(13px, 3vw, 17px) clamp(32px, 8vw, 50px);
+            font-size: clamp(1rem, 4vw, 1.15rem);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow:
+                0 0 24px rgba(200, 0, 60, 0.55),
+                0 4px 18px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* ---- OVERLAY MENSAJE ---- */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 0, 5, 0.0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            pointer-events: none;
+            transition: background 0.9s ease;
+            padding: 28px;
+        }
+
+        .overlay.show {
+            background: rgba(7, 0, 5, 0.97);
+            pointer-events: all;
+        }
+
+        .msg-content {
+            text-align: center;
+            max-width: 380px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+        }
+
+        .overlay.show .msg-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .msg-icon {
+            font-size: clamp(3rem, 12vw, 4.5rem);
+            display: block;
+            margin-bottom: 22px;
+            animation: heartbeat 1.4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(200, 0, 60, 0.8));
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            20% { transform: scale(1.22); }
+            40% { transform: scale(1); }
+            60% { transform: scale(1.14); }
+        }
+
+        .msg-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 6.5vw, 2.3rem);
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            text-shadow:
+                0 0 30px rgba(220, 0, 70, 0.9),
+                0 2px 6px rgba(0,0,0,0.9);
+        }
+
+        .msg-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--rose), transparent);
+            margin: 0 auto 22px;
+        }
+
+        .msg-body {
+            font-size: clamp(0.88rem, 3.5vw, 1.05rem);
+            color: var(--soft-pink);
+            line-height: 1.9;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .msg-body strong {
+            color: var(--gold);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .msg-signature {
+            margin-top: 30px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            color: var(--rose);
+            text-shadow: 0 0 14px rgba(192, 0, 60, 0.7);
+            letter-spacing: 1px;
+        }
+
+        .candles {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 28px;
+        }
+
+        .candle {
+            font-size: 1.6rem;
+            animation: flicker 1.5s ease-in-out infinite;
+        }
+
+        .candle:nth-child(2) { animation-delay: 0.4s; }
+        .candle:nth-child(3) { animation-delay: 0.8s; }
+
+        @keyframes flicker {
+            0%, 100% { transform: scale(1) rotate(-1deg); filter: brightness(1); }
+            25% { transform: scale(1.05) rotate(1deg); filter: brightness(1.3); }
+            50% { transform: scale(0.97) rotate(-2deg); filter: brightness(0.9); }
+            75% { transform: scale(1.03) rotate(1deg); filter: brightness(1.2); }
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="vignette"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="card" id="mainCard">
+        <span class="top-icon">🌹</span>
+        <h1 class="question">
+            <em>Ivana Karina</em>, ¿vendrás conmigo<br>el jueves?
+        </h1>
+        <p class="hint">tengo algo muy especial preparado para ti</p>
+        <div class="btn-wrap">
+            <button class="btn-si" id="btnSi">Sí 💋</button>
+            <button class="btn-no" id="btnNo">No</button>
+        </div>
+    </div>
+
+    <!-- OVERLAY DE RESPUESTA -->
+    <div class="overlay" id="overlay">
+        <div class="msg-content">
+            <span class="msg-icon">💋</span>
+            <h2 class="msg-title">Has elegido<br>la mejor opción...</h2>
+            <div class="msg-divider"></div>
+            <p class="msg-body">
+                El jueves será el día más memorable<br>de tu vida, <strong>Ivana</strong>.<br><br>
+                Cada detalle ha sido pensado para ti...<br>
+                para despertar sensaciones que solo<br>
+                <strong>tú y yo</strong> compartiremos.<br><br>
+                Prepárate para una dia donde<br>
+                el tiempo se detiene y no querrás<br>
+                que llegue el amanecer. 🕯️
+            </p>
+            <p class="msg-signature">— Te espero 🌹</p>
+            <div class="candles">
+                <span class="candle">🕯️</span>
+                <span class="candle">❤️‍🔥</span>
+                <span class="candle">🕯️</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---- PARTÍCULAS ----
+        const particlesEl = document.getElementById('particles');
+        const items = ['🌹', '🥀', '💋', '✨', '💕', '🌸'];
+
+        for (let i = 0; i < 22; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.textContent = items[Math.floor(Math.random() * items.length)];
+            p.style.cssText = `
+                left: ${Math.random() * 100}%;
+                font-size: ${Math.random() * 14 + 9}px;
+                animation-duration: ${Math.random() * 10 + 7}s;
+                animation-delay: ${Math.random() * 12}s;
+                opacity: 0;
+            `;
+            particlesEl.appendChild(p);
+        }
+
+        // ---- BOTÓN "NO" ESCAPADOR ----
+        const btnNo   = document.getElementById('btnNo');
+        const btnSi   = document.getElementById('btnSi');
+        const overlay = document.getElementById('overlay');
+
+        let isFixed = false;
+        let lastX = -999, lastY = -999;
+
+        function getRandomPos() {
+            const margin = 24;
+            const w  = btnNo.offsetWidth  || 120;
+            const h  = btnNo.offsetHeight || 54;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            let x, y, attempts = 0;
+            do {
+                x = Math.random() * (vw - w - margin * 2) + margin;
+                y = Math.random() * (vh - h - margin * 2) + margin;
+                attempts++;
+            } while (
+                attempts < 20 &&
+                Math.abs(x - lastX) < 110 &&
+                Math.abs(y - lastY) < 110
+            );
+
+            lastX = x; lastY = y;
+            return { x, y };
+        }
+
+        function makeFixed() {
+            if (isFixed) return;
+            const rect = btnNo.getBoundingClientRect();
+            btnNo.style.position = 'fixed';
+            btnNo.style.left   = rect.left + 'px';
+            btnNo.style.top    = rect.top  + 'px';
+            btnNo.style.margin = '0';
+            btnNo.style.zIndex = '100';
+            isFixed = true;
+        }
+
+        function escape() {
+            makeFixed();
+            const { x, y } = getRandomPos();
+            btnNo.style.left = x + 'px';
+            btnNo.style.top  = y + 'px';
+        }
+
+        // Desktop
+        btnNo.addEventListener('mouseenter', escape);
+
+        // Mobile: escapar al tocar
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            escape();
+        }, { passive: false });
+
+        // Mobile: si el dedo se acerca a menos de 90px, escapa
+        document.addEventListener('touchmove', (e) => {
+            if (!isFixed) return;
+            const touch = e.touches[0];
+            const rect  = btnNo.getBoundingClientRect();
+            const cx    = rect.left + rect.width  / 2;
+            const cy    = rect.top  + rect.height / 2;
+            if (Math.hypot(touch.clientX - cx, touch.clientY - cy) < 90) escape();
+        }, { passive: true });
+
+        // ---- BOTÓN "SÍ" ----
+        btnSi.addEventListener('click', () => overlay.classList.add('show'));
+        btnSi.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            overlay.classList.add('show');
+        });
+    </script>
+</body>
+</html>
